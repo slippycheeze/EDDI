@@ -80,6 +80,9 @@ namespace EddiNavigationService
             navConfig = ConfigService.Instance.navigationMonitorConfiguration;
         }
 
+        private static NavigationService instance;
+        private static readonly object instanceLock = new object();
+
         public static NavigationService Instance
         {
             get
