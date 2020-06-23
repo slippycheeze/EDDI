@@ -704,7 +704,7 @@ namespace EddiNavigationService
             StarSystem currentSystem = EDDI.Instance?.CurrentStarSystem;
             if (currentSystem != null)
             {
-                LandingPadSize shipSize = EDDI.Instance?.CurrentShip?.size ?? LandingPadSize.Large;
+                LandingPadSize shipSize = EDDI.Instance?.CurrentShip?.Size ?? LandingPadSize.Large;
                 ServiceFilter.TryGetValue(serviceQuery, out dynamic filter);
 
                 StarSystem ServiceStarSystem = GetServiceSystem(serviceQuery, maxStationDistance, prioritizeOrbitalStations);
@@ -757,7 +757,7 @@ namespace EddiNavigationService
             if (currentSystem != null)
             {
                 // Get the filter parameters
-                LandingPadSize shipSize = EDDI.Instance?.CurrentShip?.size ?? LandingPadSize.Large;
+                LandingPadSize shipSize = EDDI.Instance?.CurrentShip?.Size ?? LandingPadSize.Large;
                 ServiceFilter.TryGetValue(serviceQuery, out dynamic filter);
                 int cubeLy = filter.cubeLy;
 
