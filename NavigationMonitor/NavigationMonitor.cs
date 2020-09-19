@@ -210,29 +210,17 @@ namespace EddiNavigationMonitor
             {
                 handleCarrierJumpedEvent((CarrierJumpedEvent)@event);
             }
-            else if (@event is LocationEvent)
-            {
-                handleLocationEvent((LocationEvent)@event);
-            }
-            else if (@event is JumpedEvent)
-            {
-                handleJumpedEvent((JumpedEvent)@event);
-            }
-            else if (@event is NavRouteEvent)
-            {
-                handleCarrierJumpedEvent((CarrierJumpedEvent)@event);
-            }
-            else if (@event is LocationEvent)
-            {
-                handleLocationEvent((LocationEvent)@event);
-            }
-            else if (@event is JumpedEvent)
-            {
-                handleJumpedEvent((JumpedEvent)@event);
-            }
             else if (@event is EnteredNormalSpaceEvent)
             {
                 handleEnteredNormalSpaceEvent((EnteredNormalSpaceEvent)@event);
+            }
+            else if (@event is JumpedEvent)
+            {
+                handleJumpedEvent((JumpedEvent)@event);
+            }
+            else if (@event is LocationEvent)
+            {
+                handleLocationEvent((LocationEvent)@event);
             }
             else if (@event is NavRouteEvent)
             {
