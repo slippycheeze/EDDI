@@ -6,9 +6,13 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Search;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
 
 namespace EddiSpeechResponder
 {
@@ -27,6 +31,7 @@ namespace EddiSpeechResponder
 #pragma warning disable IDE0052 // Remove unused private members -- this may be used later
         private readonly DocumentHighlighter documentHighlighter;
 #pragma warning restore IDE0052 // Remove unused private members
+        private AvalonEdit.TextCompletionWindow completionWindow;
         private readonly AvalonEdit.FoldingStrategy foldingStrategy;
         private FoldingMargin foldingMargin;
 
@@ -80,6 +85,10 @@ namespace EddiSpeechResponder
             // Set up our Cottle highlighter
             documentHighlighter = new DocumentHighlighter(scriptView.Document, highlightingDefinition);
 
+            // Implement text completion
+            scriptView.TextArea.TextEntering += ScriptView_TextArea_TextEntering;
+            scriptView.TextArea.TextEntered += ScriptView_TextArea_TextEntered;
+
             // Monitor window size and position
             WindowStartupLocation = WindowStartupLocation.Manual;
             SourceInitialized += EditScriptWindow_SourceInitialized;
@@ -88,6 +97,45 @@ namespace EddiSpeechResponder
             LocationChanged += EditScriptWindow_SaveWindowStatePosition;
             SizeChanged += EditScriptWindow_SaveWindowStatePosition;
             StateChanged += EditScriptWindow_SaveWindowStatePosition;
+        }
+
+        private void ScriptView_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
+        {
+            // open code completion after the user has pressed dot:
+            if (e.Text == ".")
+            {
+                // Select the specific data we need to obtain
+                var lookupItem = string.Empty;
+                if (sender is TextArea textArea)
+                {
+                    var line = textArea.Document.GetLineByOffset(textArea.Caret.Offset);
+                    var lineTxt = textArea.Document.GetText(line.Offset, textArea.Caret.Offset - line.Offset);
+                    var regexMatch = Regex.Match(lineTxt, @"(?<={)(?>\w*\.+)+$");
+                    lookupItem = regexMatch.Value.TrimEnd('.');
+                }
+
+                if (!string.IsNullOrEmpty(lookupItem))
+                {
+                    throw new NotImplementedException("TODO: Identify and pass an object matching the lookupItem path");
+
+                    completionWindow = new AvalonEdit.TextCompletionWindow(scriptView.TextArea, lookupItem);
+                    completionWindow.Closed += delegate { completionWindow = null; };                    
+                }
+            }
+        }
+
+        private void ScriptView_TextArea_TextEntering(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text.Length > 0 && completionWindow != null)
+            {
+                if (!char.IsLetterOrDigit(e.Text[0]))
+                {
+                    // Whenever a non-letter is typed while the completion window is open,
+                    // insert the currently selected element.
+                    completionWindow.CompletionList.RequestInsertion(e);
+                }
+            }
+            // do not set e.Handled=true - we still want to insert the character that was typed
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

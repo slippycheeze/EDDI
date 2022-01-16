@@ -68,7 +68,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AvalonEdit\TextCompletion.cs" />
     <Compile Include="AvalonEdit\FoldingStrategy.cs" />
+    <Compile Include="AvalonEdit\TextCompletionItem.cs" />
+    <Compile Include="AvalonEdit\TextCompletionWindow.cs" />
     <Compile Include="CopyPersonalityWindow.xaml.cs">
       <DependentUpon>CopyPersonalityWindow.xaml</DependentUpon>
     </Compile>
